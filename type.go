@@ -44,3 +44,25 @@ func UnderlyingType(t btf.Type) btf.Type {
 		}
 	}
 }
+
+func HaveEnumValue(spec *btf.Spec, enumName, enumValue string) bool {
+	types, err := spec.AnyTypesByName(enumName)
+	if err != nil {
+		return false
+	}
+
+	for _, t := range types {
+		e, ok := t.(*btf.Enum)
+		if !ok {
+			continue
+		}
+
+		for _, v := range e.Values {
+			if v.Name == enumValue {
+				return true
+			}
+		}
+	}
+
+	return false
+}
