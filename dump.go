@@ -307,7 +307,7 @@ func DumpData(typ btf.Type, data []byte) (string, error) {
 	var dd dataDumper
 	err := dd.dumpData(typ, emptyBits, data)
 	if err != nil {
-		return "", err
+		return dd.sb.String(), err
 	}
 
 	return dd.sb.String(), nil
