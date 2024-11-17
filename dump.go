@@ -118,7 +118,7 @@ func (dd *dataDumper) dumpStruct(v *btf.Struct, data []byte) {
 
 	for i, member := range v.Members {
 		// dd.print("%s(offset:%d,bitfieldSize:%d,type:%#v): ", member.Name, member.Offset, member.BitfieldSize, UnderlyingType(member.Type)) // debug
-		dd.print("%s: ", member.Name)
+		dd.print(`"%s": `, member.Name)
 
 		if member.BitfieldSize > 0 {
 			bits := bitsInfo{member.Offset & 0x7, member.BitfieldSize}
@@ -138,7 +138,7 @@ func (dd *dataDumper) dumpUnion(v *btf.Union, data []byte) {
 	defer dd.printEndObject()
 
 	for i, member := range v.Members {
-		dd.print("%s: ", member.Name)
+		dd.print(`"%s": `, member.Name)
 
 		if member.BitfieldSize > 0 {
 			bits := bitsInfo{member.Offset & 0x7, member.BitfieldSize}
@@ -224,7 +224,7 @@ func (dd *dataDumper) dumpVar(v *btf.Var, bits bitsInfo, data []byte) {
 	dd.printStartObject()
 	defer dd.printEndObject()
 
-	dd.print("%s: ", v.Name)
+	dd.print(`"%s": `, v.Name)
 	dd.dumpData(v.Type, bits, data)
 }
 
@@ -232,7 +232,7 @@ func (dd *dataDumper) dumpDataSec(v *btf.Datasec, data []byte) error {
 	dd.printStartObject()
 	defer dd.printEndObject()
 
-	dd.print("%s: ", v.Name)
+	dd.print(`"%s": `, v.Name)
 
 	dd.printStartArray()
 	defer dd.printEndArray()
