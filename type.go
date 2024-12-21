@@ -2,10 +2,20 @@ package mybtf
 
 import "github.com/cilium/ebpf/btf"
 
-func isChar(t btf.Type) bool {
+func IsChar(t btf.Type) bool {
 	t = UnderlyingType(t)
 	i, ok := t.(*btf.Int)
 	return ok && i.Size == 1 && i.Encoding&btf.Signed == btf.Signed && i.Name == "char"
+}
+
+func IsInt(typ btf.Type) bool {
+	i, ok := typ.(*btf.Int)
+	return ok && i.Name == "int"
+}
+
+func IsBool(typ btf.Type) bool {
+	def, ok := typ.(*btf.Typedef)
+	return ok && def.Name == "bool"
 }
 
 func IsVoid(t btf.Type) bool {

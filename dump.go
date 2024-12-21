@@ -168,7 +168,7 @@ func (dd *dataDumper) dumpArray(v *btf.Array, data []byte) {
 	}
 
 	// if str array, print as string
-	if isChar(v.Type) {
+	if IsChar(v.Type) {
 		dd.print(`"%s"`, unsafe.String(&data[0], v.Nelems-1))
 		return
 	}
