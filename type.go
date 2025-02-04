@@ -1,6 +1,10 @@
 package mybtf
 
-import "github.com/cilium/ebpf/btf"
+import (
+	"strings"
+
+	"github.com/cilium/ebpf/btf"
+)
 
 func IsChar(t btf.Type) bool {
 	t = UnderlyingType(t)
@@ -38,6 +42,31 @@ func IsStructPointer(t btf.Type, structName string) bool {
 	return ok && s.Name == structName
 }
 
+// IsBigEndian checks if the given btf.Type is big-endian or not by checking
+// if it is typedef with a name starting with "__be". At most time, the
+// big-endian type is typedef with a name starting with "__be" in the kernel.
+func IsBigEndian(t btf.Type) bool {
+	for {
+		switch v := t.(type) {
+		case *btf.Typedef:
+			t = v.Type
+			if strings.HasPrefix(v.Name, "__be") {
+				return true
+			}
+		case *btf.Volatile:
+			t = v.Type
+		case *btf.Const:
+			t = v.Type
+		case *btf.Restrict:
+			t = v.Type
+		default:
+			return false
+		}
+	}
+}
+
+// UnderlyingType returns the underlying type of the given btf.Type if it is
+// typedef, volatile, const or restrict.
 func UnderlyingType(t btf.Type) btf.Type {
 	for {
 		switch v := t.(type) {
