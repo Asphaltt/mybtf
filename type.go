@@ -66,7 +66,7 @@ func IsBigEndian(t btf.Type) bool {
 }
 
 // UnderlyingType returns the underlying type of the given btf.Type if it is
-// typedef, volatile, const or restrict.
+// typedef, volatile, const, restrict or type tag.
 func UnderlyingType(t btf.Type) btf.Type {
 	for {
 		switch v := t.(type) {
@@ -77,6 +77,8 @@ func UnderlyingType(t btf.Type) btf.Type {
 		case *btf.Const:
 			t = v.Type
 		case *btf.Restrict:
+			t = v.Type
+		case *btf.TypeTag:
 			t = v.Type
 		default:
 			return t
