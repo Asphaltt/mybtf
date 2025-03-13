@@ -312,3 +312,10 @@ func DumpData(typ btf.Type, data []byte) (string, error) {
 
 	return dd.sb.String(), nil
 }
+
+func DumpBitfield(offset, size btf.Bits, data []byte) string {
+	var dd dataDumper
+	bits := bitsInfo{offset: offset, size: size}
+	dd.dumpBitfield(bits, data)
+	return dd.sb.String()
+}
