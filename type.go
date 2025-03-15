@@ -9,7 +9,25 @@ import (
 func IsChar(t btf.Type) bool {
 	t = UnderlyingType(t)
 	i, ok := t.(*btf.Int)
-	return ok && i.Size == 1 && i.Encoding&btf.Signed == btf.Signed && i.Name == "char"
+	return ok && i.Size == 1 && i.Name == "char"
+}
+
+func IsConstCharPtr(t btf.Type) bool {
+	t = UnderlyingType(t)
+	ptr, isPtr := t.(*btf.Pointer)
+	if !isPtr {
+		return false
+	}
+
+	t = ptr.Target
+	cnst, isConst := t.(*btf.Const)
+	return isConst && IsChar(cnst.Type)
+}
+
+func IsCharArray(t btf.Type) bool {
+	t = UnderlyingType(t)
+	arr, isArr := t.(*btf.Array)
+	return isArr && IsChar(UnderlyingType(arr.Type))
 }
 
 func IsInt(typ btf.Type) bool {
